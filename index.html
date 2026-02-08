@@ -14,7 +14,7 @@
         <p class="tagline">Keep it happy &amp; healthy every day</p>
       </header>
 
-      <section class="scene" aria-label="Calmling customisation scene">
+      <section class="scene" aria-label="Calmling care scene">
         <div class="sunbeam"></div>
 
         <div class="control control-left">
@@ -32,22 +32,52 @@
           <span>Accessories</span>
         </div>
 
+        <div class="status-card" aria-label="Calmling status">
+          <div class="stat-row">
+            <label for="hunger">Hunger <strong id="hungerValue">70</strong></label>
+            <progress id="hunger" max="100" value="70"></progress>
+          </div>
+          <div class="stat-row">
+            <label for="energy">Energy <strong id="energyValue">70</strong></label>
+            <progress id="energy" max="100" value="70"></progress>
+          </div>
+          <div class="stat-row">
+            <label for="mood">Mood <strong id="moodValue">70</strong></label>
+            <progress id="mood" max="100" value="70"></progress>
+          </div>
+          <div class="stat-row">
+            <label for="calm">Calm <strong id="calmValue">80</strong></label>
+            <progress id="calm" max="100" value="80"></progress>
+          </div>
+          <p id="message" class="message" aria-live="polite">Your Calmling is doing okay.</p>
+        </div>
+
         <div class="stump"></div>
 
-        <div class="calmling" role="img" aria-label="White fluffy Calmling with big blue eyes smiling">
-          <div class="arm left"></div>
-          <div class="arm right"></div>
-          <div class="eye left"><span></span></div>
-          <div class="eye right"><span></span></div>
-          <div class="mouth"></div>
-          <div class="leg left"></div>
-          <div class="leg right"></div>
+        <div class="calmling-wrap">
+          <div class="face-bubble" id="calmlingFace" aria-hidden="true">😌</div>
+          <div class="calmling" role="img" aria-label="White fluffy Calmling with big blue eyes smiling">
+            <div class="arm left"></div>
+            <div class="arm right"></div>
+            <div class="eye left"><span></span></div>
+            <div class="eye right"><span></span></div>
+            <div class="mouth"></div>
+            <div class="leg left"></div>
+            <div class="leg right"></div>
+          </div>
         </div>
 
         <div class="level">Level<br /><strong>6</strong></div>
       </section>
 
-      <button class="cta" type="button">🍃&nbsp; Customise your Calmling</button>
+      <section class="action-pad" aria-label="Care controls">
+        <button type="button" data-action="feed">🍎 Feed</button>
+        <button type="button" data-action="play">🎾 Play</button>
+        <button type="button" data-action="rest">💤 Rest</button>
+        <button type="button" data-action="breathe">🍃 Breathe</button>
+      </section>
     </main>
+
+    <script src="script.js" defer></script>
   </body>
 </html>

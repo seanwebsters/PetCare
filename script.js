@@ -6,30 +6,33 @@ const state = {
 };
 
 const clamp = (v) => Math.max(0, Math.min(100, v));
-
 const byId = (id) => document.getElementById(id);
+
 const messageEl = byId("message");
 const faceEl = byId("calmlingFace");
+const calmlingEl = document.querySelector(".calmling");
 
 function updateView() {
   for (const [key, value] of Object.entries(state)) {
-    byId(key).value = value;
-    byId(`${key}Value`).textContent = value;
+    const meter = byId(key);
+    const valueEl = byId(`${key}Value`);
+    if (meter) meter.value = value;
+    if (valueEl) valueEl.textContent = value;
   }
 
   const avg = (state.hunger + state.energy + state.mood + state.calm) / 4;
   if (avg > 75) {
-    faceEl.textContent = "😊";
-    messageEl.textContent = "Your Calmling feels fantastic!";
+    if (faceEl) faceEl.textContent = "😊";
+    if (messageEl) messageEl.textContent = "Your Calmling feels fantastic!";
   } else if (avg > 45) {
-    faceEl.textContent = "😌";
-    messageEl.textContent = "Your Calmling is doing okay.";
+    if (faceEl) faceEl.textContent = "😌";
+    if (messageEl) messageEl.textContent = "Your Calmling is doing okay.";
   } else if (avg > 20) {
-    faceEl.textContent = "😟";
-    messageEl.textContent = "Your Calmling needs attention.";
+    if (faceEl) faceEl.textContent = "😟";
+    if (messageEl) messageEl.textContent = "Your Calmling needs attention.";
   } else {
-    faceEl.textContent = "😭";
-    messageEl.textContent = "Your Calmling is overwhelmed — help now!";
+    if (faceEl) faceEl.textContent = "😭";
+    if (messageEl) messageEl.textContent = "Your Calmling is overwhelmed — help now!";
   }
 }
 
@@ -39,6 +42,7 @@ function applyAction(action) {
     play: { mood: +16, energy: -8, hunger: -8, calm: -2 },
     rest: { energy: +22, calm: +8, hunger: -7 },
     breathe: { calm: +18, mood: +6, energy: +2 },
+    pet: { calm: +4, mood: +3 },
   };
 
   for (const [stat, delta] of Object.entries(effects[action] || {})) {
@@ -50,6 +54,10 @@ function applyAction(action) {
 
 for (const btn of document.querySelectorAll("button[data-action]")) {
   btn.addEventListener("click", () => applyAction(btn.dataset.action));
+}
+
+if (calmlingEl) {
+  calmlingEl.addEventListener("click", () => applyAction("pet"));
 }
 
 setInterval(() => {
