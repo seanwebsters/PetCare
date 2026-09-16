@@ -1,19 +1,30 @@
-# Calmling Care
+# DIRECTION
 
-A small browser game where you look after your Calmling by keeping its stats healthy.
+A gamified life-direction app. Tell it a goal, get a personalised roadmap with milestones and daily missions, and build momentum with streaks and XP.
 
-## Play link
+This first prototype covers five core screens: **Onboarding → Home → Direction Detail → Today → Progress**, plus a lightweight Explore tab. AI-generated paths are currently mocked — a keyword-matched template engine (`app/src/data/pathTemplates.ts`) turns a typed goal into a believable multi-milestone journey in a couple of seconds, ready to be swapped for a real model later.
 
-There isn't a public hosted link yet, but you can play locally in under a minute:
+## Run it
 
 ```bash
-python3 -m http.server 4173
+cd app
+npm install
+npm run dev
 ```
 
-Then open:
-- http://127.0.0.1:4173
-- (or) http://localhost:4173
+Then open the printed local URL (typically http://localhost:5173).
 
-## Run without a server
+## What's here
 
-You can also open `index.html` directly in your browser.
+- **Onboarding** — type any goal (or pick a suggestion chip) and watch DIRECTION build a path in seconds.
+- **Home** — greeting, streak, XP, your active Directions, and today's cross-goal missions.
+- **Direction Detail** — the full milestone roadmap for a goal, with tasks, related content, and a "what's next" prompt once it's complete.
+- **Today** — the daily mission loop with a completion celebration.
+- **Progress** — streak, XP, milestones/goals reached, category trends, and achievements.
+- **Explore** — content surfaced from your active Directions.
+
+State (Directions, XP, streak, history) persists to `localStorage` — there's no backend yet.
+
+---
+
+*Previously this repo held a small "Calmling Care" pet-game stub (`index.html` / `styles.css` / `script.js` at the repo root); that code is preserved in git history.*
