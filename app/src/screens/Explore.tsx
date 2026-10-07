@@ -37,13 +37,13 @@ export function Explore() {
 
   return (
     <div className="px-5 pt-12">
-      <h1 className="text-2xl font-bold text-[var(--color-ink)]">Explore</h1>
-      <p className="mt-1 text-[14px] text-[var(--color-ink-soft)]">Content picked for the goals you're chasing.</p>
+      <h1 className="display text-2xl font-bold text-[var(--color-ink)]">Explore</h1>
+      <p className="mt-1 text-[14px] text-[var(--color-ink-soft)]">Stuff worth your scroll, picked for your goals.</p>
 
       {feed.length === 0 ? (
-        <div className="mt-8 flex flex-col items-center gap-3 rounded-2xl border border-dashed border-[var(--color-line)] bg-white py-10 text-center">
+        <div className="mt-8 flex flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-[var(--color-ink)] bg-white py-10 text-center">
           <Mascot mood="calm" size={56} />
-          <p className="text-[14px] font-semibold text-[var(--color-ink)]">Nothing to explore yet</p>
+          <p className="text-[14px] font-bold text-[var(--color-ink)]">Nothing to explore yet</p>
           <p className="px-8 text-[13px] text-[var(--color-mist)]">Add a Direction and we'll surface content that matches it.</p>
         </div>
       ) : (
@@ -52,8 +52,8 @@ export function Explore() {
             <button
               type="button"
               onClick={() => setFilter('all')}
-              className={`shrink-0 rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition-colors ${
-                filter === 'all' ? 'bg-[var(--color-brand)] text-white' : 'bg-white text-[var(--color-ink-soft)] border border-[var(--color-line)]'
+              className={`shrink-0 rounded-full border-2 border-[var(--color-ink)] px-3.5 py-1.5 text-[13px] font-bold transition-colors ${
+                filter === 'all' ? 'bg-[var(--color-brand)] text-white' : 'bg-white text-[var(--color-ink-soft)]'
               }`}
             >
               All
@@ -63,8 +63,8 @@ export function Explore() {
                 key={c}
                 type="button"
                 onClick={() => setFilter(c)}
-                className={`shrink-0 rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition-colors ${
-                  filter === c ? 'text-white' : 'bg-white text-[var(--color-ink-soft)] border border-[var(--color-line)]'
+                className={`shrink-0 rounded-full border-2 border-[var(--color-ink)] px-3.5 py-1.5 text-[13px] font-bold transition-colors ${
+                  filter === c ? 'text-white' : 'bg-white text-[var(--color-ink-soft)]'
                 }`}
                 style={filter === c ? { background: CATEGORIES[c].color } : undefined}
               >
@@ -78,13 +78,13 @@ export function Explore() {
               const meta = CATEGORIES[direction.category]
               const Icon = CONTENT_ICON[content.kind]
               return (
-                <div key={`${content.id}_${i}`} className="flex items-center gap-3.5 rounded-2xl border border-[var(--color-line)] bg-white p-3.5 shadow-[var(--shadow-soft)]">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl" style={{ background: meta.soft, color: meta.color }}>
+                <div key={`${content.id}_${i}`} className="flex items-center gap-3.5 rounded-2xl border-2 border-[var(--color-ink)] bg-white p-3.5 shadow-[var(--shadow-soft)]">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border-2 border-[var(--color-ink)]" style={{ background: meta.soft, color: meta.color }}>
                     <Icon className="h-5 w-5" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[14.5px] font-semibold text-[var(--color-ink)]">{content.title}</p>
-                    <div className="mt-0.5 flex items-center gap-1.5 text-[12px] text-[var(--color-mist)]">
+                    <p className="truncate text-[14.5px] font-bold text-[var(--color-ink)]">{content.title}</p>
+                    <div className="mt-0.5 flex items-center gap-1.5 text-[12px] font-medium text-[var(--color-mist)]">
                       <CategoryAvatar category={direction.category} size={16} />
                       {direction.goal} · {content.meta}
                     </div>

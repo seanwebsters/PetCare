@@ -21,7 +21,7 @@ export function CategoryPill({ category }: { category: Category }) {
   const Icon = ICONS[category]
   return (
     <span
-      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold"
+      className="inline-flex items-center gap-1.5 rounded-full border-2 border-[var(--color-ink)] px-2.5 py-1 text-xs font-bold"
       style={{ background: meta.soft, color: meta.color }}
     >
       <Icon className="h-3.5 w-3.5" />
@@ -35,7 +35,7 @@ export function CategoryAvatar({ category, size = 40 }: { category: Category; si
   const Icon = ICONS[category]
   return (
     <span
-      className="inline-flex items-center justify-center rounded-2xl shrink-0"
+      className="inline-flex items-center justify-center rounded-2xl border-2 border-[var(--color-ink)] shrink-0"
       style={{ background: meta.soft, color: meta.color, width: size, height: size }}
     >
       <Icon style={{ width: size * 0.5, height: size * 0.5 }} />

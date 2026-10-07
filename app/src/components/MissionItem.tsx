@@ -17,8 +17,8 @@ export function MissionItem({ title, category, minutes, xp, done, onToggle }: Mi
     <button
       type="button"
       onClick={onToggle}
-      className={`flex w-full items-center gap-3 rounded-2xl border p-3.5 text-left transition-all active:scale-[0.98] ${
-        done ? 'border-transparent bg-[var(--color-cloud)]' : 'border-[var(--color-line)] bg-white shadow-[var(--shadow-soft)]'
+      className={`flex w-full items-center gap-3 rounded-2xl border-2 p-3.5 text-left transition-all active:scale-[0.98] ${
+        done ? 'border-[var(--color-line)] bg-[var(--color-cloud)]' : 'border-[var(--color-ink)] bg-white shadow-[var(--shadow-soft)]'
       }`}
     >
       <CategoryAvatar category={category} size={40} />
@@ -32,11 +32,11 @@ export function MissionItem({ title, category, minutes, xp, done, onToggle }: Mi
       </div>
       <span
         className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
-          done ? 'border-[var(--color-brand)] bg-[var(--color-brand)]' : 'border-[var(--color-line)]'
+          done ? 'border-[var(--color-ink)] bg-[var(--color-lime)]' : 'border-[var(--color-ink)]'
         }`}
       >
         {done && (
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--color-ink)" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="m5 13 4 4L19 7" />
           </svg>
         )}

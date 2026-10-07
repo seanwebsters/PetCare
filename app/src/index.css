@@ -2,51 +2,71 @@
 
 @theme {
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
 
   /* Neutral / surface */
-  --color-ink: #12142b;
-  --color-ink-soft: #4a4a63;
-  --color-mist: #8a8aa0;
-  --color-paper: #fbfaf8;
-  --color-cloud: #f3f1fb;
-  --color-line: #e9e6f4;
+  --color-ink: #15121f;
+  --color-ink-soft: #4a4560;
+  --color-mist: #8d87a3;
+  --color-paper: #fdfbff;
+  --color-cloud: #f3effc;
+  --color-line: #e7e0f7;
 
-  /* Brand */
-  --color-brand: #6c6bf5;
-  --color-brand-dark: #524fe0;
-  --color-brand-light: #e7e6fd;
+  /* Brand - electric violet */
+  --color-brand: #7c5cff;
+  --color-brand-dark: #5f3dec;
+  --color-brand-light: #ece4ff;
 
-  /* Category pastels */
-  --color-career: #5b7fe0;
-  --color-career-soft: #e7edfd;
-  --color-money: #34a882;
-  --color-money-soft: #e2f6ee;
-  --color-health: #e0637f;
-  --color-health-soft: #fce9ed;
-  --color-life: #3fb0c7;
-  --color-life-soft: #e2f6f9;
-  --color-relationships: #9a6fd6;
-  --color-relationships-soft: #f1e9fb;
+  /* Pop accents */
+  --color-lime: #c6f135;
+  --color-lime-ink: #3d4a05;
+  --color-pink: #ff4f9a;
+  --color-pink-soft: #ffe3f0;
 
-  --color-gold: #e0a640;
-  --color-gold-soft: #fbf1de;
+  /* Category pops - saturated */
+  --color-career: #4f6bff;
+  --color-career-soft: #e6eaff;
+  --color-money: #15c285;
+  --color-money-soft: #dcfaee;
+  --color-health: #ff4d6d;
+  --color-health-soft: #ffe2e7;
+  --color-life: #00c2d1;
+  --color-life-soft: #d8f9fb;
+  --color-relationships: #c138e0;
+  --color-relationships-soft: #f8e3fc;
 
-  --shadow-soft: 0 1px 2px rgba(18, 20, 43, 0.04), 0 8px 24px -8px rgba(18, 20, 43, 0.10);
-  --shadow-lift: 0 2px 8px rgba(18, 20, 43, 0.06), 0 16px 40px -12px rgba(18, 20, 43, 0.16);
+  --color-gold: #ff9500;
+  --color-gold-soft: #fff0da;
+
+  --shadow-soft: 0 1px 2px rgba(21, 18, 31, 0.05), 0 8px 24px -8px rgba(21, 18, 31, 0.12);
+  --shadow-lift: 0 2px 8px rgba(21, 18, 31, 0.07), 0 16px 40px -12px rgba(21, 18, 31, 0.2);
+  --shadow-pop: 4px 4px 0 0 var(--color-ink);
+  --shadow-pop-sm: 3px 3px 0 0 var(--color-ink);
 
   --animate-float: float 6s ease-in-out infinite;
   --animate-pop: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-wiggle: wiggle 2.4s ease-in-out infinite;
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-8px) rotate(1deg); }
 }
 
 @keyframes pop {
   0% { transform: scale(0.85); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
+}
+
+.display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
 }
 
 html, body, #root {
