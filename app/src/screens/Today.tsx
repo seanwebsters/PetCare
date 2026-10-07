@@ -2,6 +2,7 @@ import { useStore } from '../state/store'
 import { MissionItem } from '../components/MissionItem'
 import { Mascot } from '../components/Mascot'
 import { IconFlame } from '../components/icons'
+import { CornerGems } from '../components/CornerGems'
 import { findTaskContext } from '../lib/tasks'
 
 const WEEKDAY = new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })
@@ -76,7 +77,8 @@ export function Today() {
           )}
 
           {allDone && (
-            <div className="pixel mt-7 animate-[pop_0.5s_steps(3)] border-2 border-[var(--color-ink)] bg-white p-6 text-center shadow-[var(--shadow-pop)]">
+            <div className="pixel relative mt-7 animate-[pop_0.5s_steps(3)] border-2 border-[var(--color-ink)] bg-white p-6 text-center shadow-[var(--shadow-pop)]">
+              <CornerGems />
               <Mascot mood="celebrate" size={72} className="mx-auto" />
               <p className="display mt-3 text-sm leading-[1.6] text-[var(--color-ink)]">
                 {doneCount}/{missions.length} COMPLETE

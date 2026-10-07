@@ -17,6 +17,17 @@ function StatTile({ label, value }: { label: string; value: ReactNode }) {
   )
 }
 
+const ACHIEVEMENT_COLORS = [
+  'var(--color-lime)',
+  'var(--color-gold-soft)',
+  'var(--color-life-soft)',
+  'var(--color-pink-soft)',
+  'var(--color-career-soft)',
+  'var(--color-relationships-soft)',
+  'var(--color-money-soft)',
+  'var(--color-gold)',
+]
+
 function categoryTrend(history: { date: string; categories: Partial<Record<Category, number>> }[], category: Category): '↑' | '→' {
   const today = todayISO()
   const recentActivity = history.some((h) => daysBetween(h.date, today) <= 7 && (h.categories[category] ?? 0) > 0)
@@ -89,12 +100,14 @@ export function Progress() {
       <div className="mt-7">
         <h2 className="display mb-3 text-xs text-[var(--color-ink)]">Achievements</h2>
         <div className="grid grid-cols-2 gap-2.5">
-          {ACHIEVEMENTS.map((a) => {
+          {ACHIEVEMENTS.map((a, i) => {
             const unlocked = a.isUnlocked(state)
+            const color = ACHIEVEMENT_COLORS[i % ACHIEVEMENT_COLORS.length]
             return (
               <div
                 key={a.id}
-                className={`pixel border-2 p-3.5 ${unlocked ? 'border-[var(--color-ink)] bg-[var(--color-lime)] shadow-[var(--shadow-pop-sm)]' : 'border-dashed border-[var(--color-line)] bg-transparent opacity-50'}`}
+                className={`pixel border-2 p-3.5 ${unlocked ? 'border-[var(--color-ink)] shadow-[var(--shadow-pop-sm)]' : 'border-dashed border-[var(--color-line)] bg-transparent opacity-50'}`}
+                style={unlocked ? { background: color } : undefined}
               >
                 <p className="text-2xl">{a.icon}</p>
                 <p className="mt-1.5 text-base font-bold text-[var(--color-ink)]">{a.title}</p>

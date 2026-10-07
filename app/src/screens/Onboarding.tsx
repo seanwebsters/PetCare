@@ -6,6 +6,7 @@ import { Mascot } from '../components/Mascot'
 import { CategoryPill } from '../components/CategoryBadge'
 import type { Direction } from '../types'
 import { IconChevronRight, IconSparkle } from '../components/icons'
+import { CornerGems } from '../components/CornerGems'
 
 type Stage = 'ask' | 'thinking' | 'preview'
 
@@ -168,7 +169,8 @@ function PreviewStage({ direction, onConfirm, onBack }: { direction: Direction; 
         <p className="text-base font-bold text-[var(--color-ink)]">Say less. Here's your path.</p>
       </div>
 
-      <div className="pixel mt-4 border-2 border-[var(--color-ink)] bg-white p-5 shadow-[var(--shadow-pop)]">
+      <div className="pixel relative mt-4 border-2 border-[var(--color-ink)] bg-white p-5 shadow-[var(--shadow-pop)]">
+        <CornerGems />
         <CategoryPill category={direction.category} />
         <h2 className="display mt-3 text-base leading-[1.6] text-[var(--color-ink)]">{direction.goal}</h2>
         <p className="mt-1 text-sm font-medium text-[var(--color-ink-soft)]">{direction.milestones.length} milestones · {direction.milestones.reduce((n, m) => n + m.tasks.length, 0)} steps</p>

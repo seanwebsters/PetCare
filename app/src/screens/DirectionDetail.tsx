@@ -4,6 +4,7 @@ import { useStore } from '../state/store'
 import { CategoryPill } from '../components/CategoryBadge'
 import { ProgressRing } from '../components/ProgressRing'
 import { Mascot } from '../components/Mascot'
+import { CornerGems } from '../components/CornerGems'
 import { IconChevronLeft, IconChevronRight, IconPlay, IconDoc, IconSparkle } from '../components/icons'
 import { CATEGORIES } from '../data/categories'
 import { directionProgress, isDirectionComplete, isMilestoneDone, activeMilestoneIndex } from '../lib/xp'
@@ -173,7 +174,8 @@ export function DirectionDetail() {
       )}
 
       {complete && (
-        <div className="pixel mt-8 border-2 border-[var(--color-ink)] bg-white p-5 text-center shadow-[var(--shadow-pop)]">
+        <div className="pixel relative mt-8 border-2 border-[var(--color-ink)] bg-white p-5 text-center shadow-[var(--shadow-pop)]">
+          <CornerGems />
           <Mascot mood="celebrate" size={64} className="mx-auto" />
           <p className="display mt-3 text-sm leading-[1.7] text-[var(--color-ink)]">DIRECTION ACHIEVED!</p>
           <p className="mt-2 text-base font-medium text-[var(--color-mist)]">What's calling you next?</p>
