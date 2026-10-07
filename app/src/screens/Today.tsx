@@ -25,25 +25,25 @@ export function Today() {
 
   return (
     <div className="px-5 pt-12">
-      <p className="text-[13px] font-bold text-[var(--color-mist)]">{WEEKDAY.format(new Date())}</p>
-      <h1 className="display mt-1 text-2xl font-bold text-[var(--color-ink)]">Today's Missions</h1>
-      <p className="mt-1.5 text-[14px] leading-relaxed text-[var(--color-ink-soft)]">
+      <p className="text-base font-bold uppercase text-[var(--color-mist)]">{WEEKDAY.format(new Date())}</p>
+      <h1 className="display mt-2 text-lg leading-[1.6] text-[var(--color-ink)]">Today's Missions</h1>
+      <p className="mt-2 text-[18px] leading-relaxed text-[var(--color-ink-soft)]">
         Small moves across your whole life. That's the whole game.
       </p>
 
       {missions.length === 0 ? (
-        <div className="mt-8 flex flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-[var(--color-ink)] bg-white py-10 text-center">
+        <div className="pixel mt-8 flex flex-col items-center gap-3 border-2 border-dashed border-[var(--color-ink)] bg-white py-10 text-center">
           <Mascot mood="calm" size={56} />
-          <p className="text-[14px] font-bold text-[var(--color-ink)]">No missions yet</p>
-          <p className="px-8 text-[13px] text-[var(--color-mist)]">Add a Direction from Home and we'll pick your first moves.</p>
+          <p className="text-[18px] font-bold text-[var(--color-ink)]">No missions yet</p>
+          <p className="px-8 text-base text-[var(--color-mist)]">Add a Direction from Home and we'll pick your first moves.</p>
         </div>
       ) : (
         <>
-          <div className="mt-6 rounded-2xl border-2 border-[var(--color-ink)] bg-white p-4">
-            <p className="text-[13px] font-bold text-[var(--color-ink-soft)]">{doneCount}/{missions.length} missions for today</p>
-            <div className="mt-2 h-2.5 w-full overflow-hidden rounded-full border border-[var(--color-ink)]/15 bg-[var(--color-cloud)]">
+          <div className="pixel mt-6 border-2 border-[var(--color-ink)] bg-white p-4">
+            <p className="text-base font-bold text-[var(--color-ink-soft)]">{doneCount}/{missions.length} missions for today</p>
+            <div className="mt-2 h-3 w-full border-2 border-[var(--color-ink)] bg-[var(--color-cloud)] p-[1px]">
               <div
-                className="h-full rounded-full bg-[var(--color-brand)] transition-all duration-500"
+                className="h-full bg-[var(--color-brand)] transition-all duration-500"
                 style={{ width: `${(doneCount / missions.length) * 100}%` }}
               />
             </div>
@@ -69,31 +69,31 @@ export function Today() {
             <button
               type="button"
               onClick={completeAll}
-              className="mt-6 w-full rounded-2xl border-2 border-[var(--color-ink)] bg-[var(--color-brand)] py-3.5 text-[15px] font-bold text-white shadow-[var(--shadow-pop)] transition-all active:translate-x-[3px] active:translate-y-[3px] active:shadow-none"
+              className="pixel mt-6 w-full border-2 border-[var(--color-ink)] bg-[var(--color-brand)] py-3.5 text-base font-bold text-white shadow-[var(--shadow-pop)] transition-all active:translate-x-[3px] active:translate-y-[3px] active:shadow-none"
             >
-              Mark all complete
+              MARK ALL COMPLETE
             </button>
           )}
 
           {allDone && (
-            <div className="mt-7 animate-[pop_0.5s_ease] rounded-3xl border-2 border-[var(--color-ink)] bg-white p-6 text-center shadow-[var(--shadow-pop)]">
+            <div className="pixel mt-7 animate-[pop_0.5s_steps(3)] border-2 border-[var(--color-ink)] bg-white p-6 text-center shadow-[var(--shadow-pop)]">
               <Mascot mood="celebrate" size={72} className="mx-auto" />
-              <p className="display mt-3 text-lg font-bold text-[var(--color-ink)]">
-                {doneCount}/{missions.length} complete 🎉
+              <p className="display mt-3 text-sm leading-[1.6] text-[var(--color-ink)]">
+                {doneCount}/{missions.length} COMPLETE
               </p>
-              <p className="mt-1 text-[14px] text-[var(--color-ink-soft)]">You just leveled up IRL.</p>
+              <p className="mt-2 text-[18px] text-[var(--color-ink-soft)]">You just leveled up IRL.</p>
               <div className="mt-4 flex items-center justify-center gap-3">
-                <span className="rounded-full border-2 border-[var(--color-ink)] bg-[var(--color-lime)] px-3.5 py-1.5 text-[13px] font-bold text-[var(--color-ink)]">
+                <span className="pixel-sm border-2 border-[var(--color-ink)] bg-[var(--color-lime)] px-3.5 py-1.5 text-base font-bold text-[var(--color-ink)]">
                   +{todayLog?.xp ?? 0} XP
                 </span>
-                <span className="flex items-center gap-1.5 rounded-full border-2 border-[var(--color-ink)] bg-[var(--color-gold-soft)] px-3.5 py-1.5 text-[13px] font-bold text-[var(--color-gold)]">
+                <span className="pixel-sm flex items-center gap-1.5 border-2 border-[var(--color-ink)] bg-[var(--color-gold-soft)] px-3.5 py-1.5 text-base font-bold text-[var(--color-gold)]">
                   <IconFlame className="h-4 w-4" /> {state.streak} day streak
                 </span>
               </div>
             </div>
           )}
 
-          <p className="mx-auto mt-8 max-w-[220px] text-center text-[13px] italic text-[var(--color-mist)]">
+          <p className="mx-auto mt-8 max-w-[220px] text-center text-base italic text-[var(--color-mist)]">
             Done today beats perfect someday.
           </p>
         </>

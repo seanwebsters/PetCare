@@ -1,72 +1,101 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "VT323", ui-monospace, "Courier New", monospace;
+  --font-display: "Press Start 2P", ui-monospace, monospace;
 
-  /* Neutral / surface */
-  --color-ink: #15121f;
-  --color-ink-soft: #4a4560;
-  --color-mist: #8d87a3;
-  --color-paper: #fdfbff;
-  --color-cloud: #f3effc;
-  --color-line: #e7e0f7;
+  /* Neutral / surface - warm cream cartridge */
+  --color-ink: #1a1625;
+  --color-ink-soft: #4a4460;
+  --color-mist: #847d6e;
+  --color-paper: #fff6dc;
+  --color-cloud: #ffecb3;
+  --color-line: #e3c98a;
 
-  /* Brand - electric violet */
-  --color-brand: #7c5cff;
-  --color-brand-dark: #5f3dec;
-  --color-brand-light: #ece4ff;
+  /* Brand - arcade blue */
+  --color-brand: #2d6cdf;
+  --color-brand-dark: #1a4bb0;
+  --color-brand-light: #cfe0fb;
 
   /* Pop accents */
-  --color-lime: #c6f135;
-  --color-lime-ink: #3d4a05;
-  --color-pink: #ff4f9a;
-  --color-pink-soft: #ffe3f0;
+  --color-lime: #3ddc5b;
+  --color-lime-ink: #0b3d1a;
+  --color-pink: #ff3d7f;
+  --color-pink-soft: #ffd3e2;
 
-  /* Category pops - saturated */
-  --color-career: #4f6bff;
-  --color-career-soft: #e6eaff;
-  --color-money: #15c285;
-  --color-money-soft: #dcfaee;
-  --color-health: #ff4d6d;
-  --color-health-soft: #ffe2e7;
-  --color-life: #00c2d1;
-  --color-life-soft: #d8f9fb;
-  --color-relationships: #c138e0;
-  --color-relationships-soft: #f8e3fc;
+  /* Category pops - flat arcade primaries */
+  --color-career: #2d6cdf;
+  --color-career-soft: #d7e6fb;
+  --color-money: #2bb673;
+  --color-money-soft: #d2f3e3;
+  --color-health: #ff3b30;
+  --color-health-soft: #ffd9d6;
+  --color-life: #17b3c7;
+  --color-life-soft: #cdf2f6;
+  --color-relationships: #9b3fd1;
+  --color-relationships-soft: #ecd7f8;
 
-  --color-gold: #ff9500;
-  --color-gold-soft: #fff0da;
+  --color-gold: #ffb400;
+  --color-gold-soft: #ffe9b3;
 
-  --shadow-soft: 0 1px 2px rgba(21, 18, 31, 0.05), 0 8px 24px -8px rgba(21, 18, 31, 0.12);
-  --shadow-lift: 0 2px 8px rgba(21, 18, 31, 0.07), 0 16px 40px -12px rgba(21, 18, 31, 0.2);
+  --shadow-soft: 0 2px 0 0 rgba(26, 22, 37, 0.15);
+  --shadow-lift: 4px 4px 0 0 var(--color-ink);
   --shadow-pop: 4px 4px 0 0 var(--color-ink);
   --shadow-pop-sm: 3px 3px 0 0 var(--color-ink);
 
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-pop: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  --animate-wiggle: wiggle 2.4s ease-in-out infinite;
+  --animate-float: float 2.4s steps(4) infinite;
+  --animate-pop: pop 0.25s steps(3) forwards;
+  --animate-wiggle: wiggle 1.4s steps(4) infinite;
+  --animate-blink: blink 1s steps(1) infinite;
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0) rotate(-1deg); }
-  50% { transform: translateY(-8px) rotate(1deg); }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
 }
 
 @keyframes pop {
-  0% { transform: scale(0.85); opacity: 0; }
+  0% { transform: scale(0.8); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 }
 
 @keyframes wiggle {
   0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-3deg); }
-  75% { transform: rotate(3deg); }
+  25% { transform: rotate(-4deg); }
+  75% { transform: rotate(4deg); }
+}
+
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
 
 .display {
   font-family: var(--font-display);
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
+  -webkit-font-smoothing: none;
+  line-height: 1.5;
+}
+
+/* Stepped "pixel corner" silhouette - the signature retro-game cut corner */
+.pixel {
+  clip-path: polygon(
+    0px 8px, 8px 8px, 8px 0px,
+    calc(100% - 8px) 0px, calc(100% - 8px) 8px, 100% 8px,
+    100% calc(100% - 8px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%,
+    8px 100%, 8px calc(100% - 8px), 0px calc(100% - 8px)
+  );
+  border-radius: 0 !important;
+}
+
+.pixel-sm {
+  clip-path: polygon(
+    0px 4px, 4px 4px, 4px 0px,
+    calc(100% - 4px) 0px, calc(100% - 4px) 4px, 100% 4px,
+    100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+    4px 100%, 4px calc(100% - 4px), 0px calc(100% - 4px)
+  );
+  border-radius: 0 !important;
 }
 
 html, body, #root {
@@ -76,9 +105,14 @@ html, body, #root {
 body {
   margin: 0;
   background: var(--color-paper);
+  background-image:
+    linear-gradient(var(--color-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
+  background-size: 16px 16px;
+  background-attachment: fixed;
   color: var(--color-ink);
   font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
+  font-size: 19px;
   text-rendering: optimizeLegibility;
   overscroll-behavior-y: none;
 }
@@ -88,8 +122,8 @@ body {
 }
 
 ::selection {
-  background: var(--color-brand-light);
-  color: var(--color-brand-dark);
+  background: var(--color-brand);
+  color: white;
 }
 
 .no-scrollbar::-webkit-scrollbar {

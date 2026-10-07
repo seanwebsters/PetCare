@@ -10,9 +10,9 @@ import type { Category } from '../types'
 
 function StatTile({ label, value }: { label: string; value: ReactNode }) {
   return (
-    <div className="rounded-2xl border-2 border-[var(--color-ink)] bg-white p-3.5 text-center shadow-[var(--shadow-soft)]">
-      <p className="display text-xl font-bold text-[var(--color-ink)]">{value}</p>
-      <p className="mt-0.5 text-[11px] font-bold text-[var(--color-mist)]">{label}</p>
+    <div className="pixel border-2 border-[var(--color-ink)] bg-white p-3.5 text-center shadow-[var(--shadow-soft)]">
+      <p className="display text-base font-bold text-[var(--color-ink)]">{value}</p>
+      <p className="mt-1.5 text-sm font-bold uppercase text-[var(--color-mist)]">{label}</p>
     </div>
   )
 }
@@ -35,16 +35,16 @@ export function Progress() {
 
   return (
     <div className="px-5 pt-12 pb-4">
-      <h1 className="display text-2xl font-bold text-[var(--color-ink)]">Your Progress</h1>
-      <p className="mt-1 text-[14px] text-[var(--color-ink-soft)]">Look how far you've come. Actually look.</p>
+      <h1 className="display text-lg leading-[1.6] text-[var(--color-ink)]">Your Progress</h1>
+      <p className="mt-2 text-[18px] text-[var(--color-ink-soft)]">Look how far you've come. Actually look.</p>
 
-      <div className="mt-5 rounded-2xl border-2 border-[var(--color-ink)] bg-[var(--color-brand-light)] p-4 shadow-[var(--shadow-pop-sm)]">
+      <div className="pixel mt-5 border-2 border-[var(--color-ink)] bg-[var(--color-brand-light)] p-4 shadow-[var(--shadow-pop-sm)]">
         <div className="flex items-center justify-between">
-          <p className="text-[13px] font-bold text-[var(--color-ink-soft)]">Level {state.level}</p>
-          <p className="text-[13px] font-bold text-[var(--color-mist)]">{current}/{needed} XP</p>
+          <p className="text-base font-bold text-[var(--color-ink-soft)]">Level {state.level}</p>
+          <p className="text-base font-bold text-[var(--color-mist)]">{current}/{needed} XP</p>
         </div>
-        <div className="mt-2 h-2.5 w-full overflow-hidden rounded-full border border-[var(--color-ink)]/15 bg-white">
-          <div className="h-full rounded-full bg-[var(--color-brand)] transition-all duration-500" style={{ width: `${levelPct}%` }} />
+        <div className="mt-2 h-3 w-full border-2 border-[var(--color-ink)] bg-white p-[1px]">
+          <div className="h-full bg-[var(--color-brand)] transition-all duration-500" style={{ width: `${levelPct}%` }} />
         </div>
       </div>
 
@@ -64,19 +64,19 @@ export function Progress() {
         <StatTile label="this month" value={monthCompleted} />
       </div>
 
-      <div className="mt-7 rounded-2xl border-2 border-[var(--color-ink)] bg-white p-4 shadow-[var(--shadow-soft)]">
-        <p className="text-[13px] font-bold text-[var(--color-ink-soft)]">This month</p>
-        <p className="display mt-1 text-[15px] font-bold text-[var(--color-ink)]">{monthCompleted} missions · {monthXp} XP earned</p>
+      <div className="pixel mt-7 border-2 border-[var(--color-ink)] bg-white p-4 shadow-[var(--shadow-soft)]">
+        <p className="text-base font-bold text-[var(--color-ink-soft)]">This month</p>
+        <p className="display mt-2 text-xs leading-[1.7] text-[var(--color-ink)]">{monthCompleted} missions · {monthXp} XP earned</p>
       </div>
 
       {activeCategories.length > 0 && (
         <div className="mt-7">
-          <h2 className="display mb-3 text-[16px] font-bold text-[var(--color-ink)]">Your year in motion</h2>
-          <div className="rounded-2xl border-2 border-[var(--color-ink)] bg-white p-2 shadow-[var(--shadow-soft)]">
+          <h2 className="display mb-3 text-xs text-[var(--color-ink)]">Your year in motion</h2>
+          <div className="pixel border-2 border-[var(--color-ink)] bg-white p-2 shadow-[var(--shadow-soft)]">
             {activeCategories.map((c) => (
               <div key={c} className="flex items-center gap-3 p-2.5">
                 <CategoryAvatar category={c} size={34} />
-                <span className="flex-1 text-[14px] font-bold text-[var(--color-ink)]">{CATEGORIES[c].label}</span>
+                <span className="flex-1 text-[18px] font-bold text-[var(--color-ink)]">{CATEGORIES[c].label}</span>
                 <span className="text-lg font-bold" style={{ color: CATEGORIES[c].color }}>
                   {categoryTrend(state.history, c)}
                 </span>
@@ -87,18 +87,18 @@ export function Progress() {
       )}
 
       <div className="mt-7">
-        <h2 className="display mb-3 text-[16px] font-bold text-[var(--color-ink)]">Achievements</h2>
+        <h2 className="display mb-3 text-xs text-[var(--color-ink)]">Achievements</h2>
         <div className="grid grid-cols-2 gap-2.5">
           {ACHIEVEMENTS.map((a) => {
             const unlocked = a.isUnlocked(state)
             return (
               <div
                 key={a.id}
-                className={`rounded-2xl border-2 p-3.5 ${unlocked ? 'border-[var(--color-ink)] bg-[var(--color-lime)] shadow-[var(--shadow-pop-sm)]' : 'border-dashed border-[var(--color-line)] bg-transparent opacity-50'}`}
+                className={`pixel border-2 p-3.5 ${unlocked ? 'border-[var(--color-ink)] bg-[var(--color-lime)] shadow-[var(--shadow-pop-sm)]' : 'border-dashed border-[var(--color-line)] bg-transparent opacity-50'}`}
               >
                 <p className="text-2xl">{a.icon}</p>
-                <p className="mt-1.5 text-[13px] font-bold text-[var(--color-ink)]">{a.title}</p>
-                <p className="mt-0.5 text-[11px] leading-snug text-[var(--color-ink-soft)] opacity-80">{a.description}</p>
+                <p className="mt-1.5 text-base font-bold text-[var(--color-ink)]">{a.title}</p>
+                <p className="mt-0.5 text-sm leading-snug text-[var(--color-ink-soft)] opacity-80">{a.description}</p>
               </div>
             )
           })}

@@ -19,7 +19,7 @@ export function NavBar() {
             to={to}
             end={end}
             className={({ isActive }) =>
-              `flex flex-1 flex-col items-center gap-0.5 rounded-xl px-2 py-1.5 text-[11px] font-bold transition-colors ${
+              `flex flex-1 flex-col items-center gap-0.5 px-2 py-1.5 text-sm font-bold uppercase tracking-tight transition-colors ${
                 isActive ? 'text-[var(--color-ink)]' : 'text-[var(--color-mist)]'
               }`
             }
@@ -27,8 +27,8 @@ export function NavBar() {
             {({ isActive }) => (
               <>
                 <span
-                  className={`flex h-7 w-7 items-center justify-center rounded-full transition-colors ${
-                    isActive ? 'bg-[var(--color-lime)]' : ''
+                  className={`flex h-7 w-7 items-center justify-center border-2 transition-colors ${
+                    isActive ? 'border-[var(--color-ink)] bg-[var(--color-lime)]' : 'border-transparent'
                   }`}
                 >
                   <Icon className="h-5 w-5" strokeWidth={isActive ? 2.2 : 1.8} />

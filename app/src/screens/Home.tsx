@@ -26,39 +26,39 @@ export function Home() {
     <div className="px-5 pt-12">
       <div className="flex items-start justify-between">
         <div>
-          <p className="display text-2xl font-bold text-[var(--color-ink)]">
+          <p className="display text-base leading-[1.6] text-[var(--color-ink)]">
             {greeting()}, {state.name}
           </p>
-          <p className="mt-1 text-[14px] text-[var(--color-ink-soft)]">Tiny steps today. Big glow-up incoming.</p>
+          <p className="mt-2 text-[18px] text-[var(--color-ink-soft)]">Tiny steps today. Big glow-up incoming.</p>
         </div>
         <Mascot mood="happy" size={52} />
       </div>
 
       <div className="mt-5 flex gap-3">
-        <div className="flex flex-1 items-center gap-2.5 rounded-2xl border-2 border-[var(--color-ink)] bg-[var(--color-gold-soft)] p-3.5 shadow-[var(--shadow-pop-sm)]">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-gold)] text-white">
+        <div className="pixel flex flex-1 items-center gap-2.5 border-2 border-[var(--color-ink)] bg-[var(--color-gold-soft)] p-3.5 shadow-[var(--shadow-pop-sm)]">
+          <span className="pixel-sm flex h-9 w-9 items-center justify-center border-2 border-[var(--color-ink)] bg-[var(--color-gold)] text-white">
             <IconFlame className="h-5 w-5" />
           </span>
           <div>
-            <p className="display text-lg font-bold leading-none text-[var(--color-ink)]">{state.streak}</p>
-            <p className="text-[11px] font-bold text-[var(--color-ink-soft)]">day streak 🔥</p>
+            <p className="display text-base leading-none text-[var(--color-ink)]">{state.streak}</p>
+            <p className="mt-1.5 text-sm font-bold uppercase text-[var(--color-ink-soft)]">day streak</p>
           </div>
         </div>
-        <div className="flex flex-1 items-center gap-2.5 rounded-2xl border-2 border-[var(--color-ink)] bg-[var(--color-brand-light)] p-3.5 shadow-[var(--shadow-pop-sm)]">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-brand)] text-[15px] font-bold text-white">
+        <div className="pixel flex flex-1 items-center gap-2.5 border-2 border-[var(--color-ink)] bg-[var(--color-brand-light)] p-3.5 shadow-[var(--shadow-pop-sm)]">
+          <span className="pixel-sm flex h-9 w-9 items-center justify-center border-2 border-[var(--color-ink)] bg-[var(--color-brand)] text-sm font-bold text-white">
             {state.level}
           </span>
           <div>
-            <p className="display text-lg font-bold leading-none text-[var(--color-ink)]">{state.xp} XP</p>
-            <p className="text-[11px] font-bold text-[var(--color-ink-soft)]">level {state.level}</p>
+            <p className="display text-base leading-none text-[var(--color-ink)]">{state.xp}XP</p>
+            <p className="mt-1.5 text-sm font-bold uppercase text-[var(--color-ink-soft)]">level {state.level}</p>
           </div>
         </div>
       </div>
 
       <div className="mt-7 flex items-center justify-between">
-        <h2 className="display text-[16px] font-bold text-[var(--color-ink)]">Your Directions</h2>
-        <Link to="/new" className="flex items-center gap-1 rounded-full border-2 border-[var(--color-ink)] bg-[var(--color-lime)] px-2.5 py-1 text-[12px] font-bold text-[var(--color-ink)] shadow-[var(--shadow-pop-sm)] transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none">
-          <IconPlus className="h-3.5 w-3.5" /> Add
+        <h2 className="display text-xs text-[var(--color-ink)]">Your Directions</h2>
+        <Link to="/new" className="pixel-sm flex items-center gap-1 border-2 border-[var(--color-ink)] bg-[var(--color-lime)] px-2.5 py-1 text-sm font-bold text-[var(--color-ink)] shadow-[var(--shadow-pop-sm)] transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none">
+          <IconPlus className="h-3.5 w-3.5" /> ADD
         </Link>
       </div>
 
@@ -66,11 +66,11 @@ export function Home() {
         {activeDirections.length === 0 && (
           <Link
             to="/new"
-            className="flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-[var(--color-ink)] bg-white py-8 text-center"
+            className="pixel flex flex-col items-center justify-center gap-2 border-2 border-dashed border-[var(--color-ink)] bg-white py-8 text-center"
           >
             <Mascot mood="calm" size={56} />
-            <p className="text-[14px] font-bold text-[var(--color-ink)]">Choose your first Direction</p>
-            <p className="px-6 text-[13px] text-[var(--color-mist)]">Drop a goal and we'll build your path. No cap.</p>
+            <p className="text-[18px] font-bold text-[var(--color-ink)]">Choose your first Direction</p>
+            <p className="px-6 text-base text-[var(--color-mist)]">Drop a goal and we'll build your path. No cap.</p>
           </Link>
         )}
         {activeDirections.map((d) => (
@@ -81,8 +81,8 @@ export function Home() {
       {missions.length > 0 && (
         <>
           <div className="mt-8 flex items-center justify-between">
-            <h2 className="display text-[16px] font-bold text-[var(--color-ink)]">Today's Missions</h2>
-            <Link to="/today" className="text-[13px] font-bold text-[var(--color-brand-dark)]">
+            <h2 className="display text-xs text-[var(--color-ink)]">Today's Missions</h2>
+            <Link to="/today" className="text-base font-bold text-[var(--color-brand-dark)]">
               {doneCount}/{missions.length} done
             </Link>
           </div>
@@ -104,7 +104,7 @@ export function Home() {
         </>
       )}
 
-      <p className="mx-auto mt-9 max-w-[240px] text-center text-[13px] italic text-[var(--color-mist)]">
+      <p className="mx-auto mt-9 max-w-[240px] text-center text-base italic text-[var(--color-mist)]">
         "Progress looks different for everyone. Keep going."
       </p>
     </div>

@@ -25,8 +25,8 @@ export function ProgressRing({ percent, size = 64, stroke = 6, color = 'var(--co
           strokeWidth={stroke}
           strokeDasharray={c}
           strokeDashoffset={offset}
-          strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 0.6s cubic-bezier(0.34,1.2,0.64,1)' }}
+          strokeLinecap="butt"
+          style={{ transition: 'stroke-dashoffset 0.3s steps(8)' }}
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">{children}</div>
