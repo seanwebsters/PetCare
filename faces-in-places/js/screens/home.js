@@ -4,6 +4,21 @@ import { msUntilReset, dayKey } from "../core/challenges.js";
 import { CHALLENGE_XP } from "../core/progression.js";
 import { rarity as getRarity } from "../core/catalog.js";
 import { friendBlockies, person } from "../data/seed.js";
+import { composeBlockie } from "../core/factory.js";
+import { syntheticAnalysis, defaultFace } from "../core/analysis.js";
+import { renderBlockie } from "../render/blockie.js";
+
+// A little character acting out today's challenge.
+function challengeMascot(challenge) {
+  const { traits } = composeBlockie({
+    analysis: syntheticAnalysis({ hue: 196, sat: 0.7, light: 0.62, hash: 77 }),
+    face: defaultFace(),
+    category: challenge.rule.category || "street",
+    mood: challenge.rule.mood || "happy",
+    seed: 4242,
+  });
+  return renderBlockie(traits, { label: "" });
+}
 
 function countdown() {
   const ms = msUntilReset();
@@ -49,9 +64,14 @@ export default function home(root) {
       ${statusChips()}
     </header>
 
-    <section class="hello">
-      <p class="eyebrow">${greeting()}, ${esc(state.profile.name)}</p>
-      <h1 class="display">Everywhere<br>has a face.</h1>
+    <section class="hero">
+      <div class="hero__copy">
+        <p class="eyebrow">${greeting()}, ${esc(state.profile.name)} 👋</p>
+        <h1 class="display">Everywhere<br>has a <span class="hl">face.</span></h1>
+      </div>
+      <div class="hero__parade" aria-hidden="true">
+        ${(mine.length >= 3 ? mine : friendsToday).slice(0, 3).map((b, i) => `<span class="hero__bk hero__bk--${i}">${blockieArt(b)}</span>`).join("")}
+      </div>
     </section>
 
     <section class="challenge ${completed ? "challenge--done" : ""}">
@@ -59,9 +79,10 @@ export default function home(root) {
         <span class="eyebrow eyebrow--light">Today's challenge</span>
         <span class="challenge__timer" id="timer">⏱ ${countdown()}</span>
       </div>
+      <div class="challenge__mascot" aria-hidden="true">${challengeMascot(challenge)}</div>
       <div class="challenge__main">
         <div class="challenge__emoji" aria-hidden="true">${challenge.emoji}</div>
-        <div>
+        <div class="challenge__text">
           <h2>${esc(challenge.title)}</h2>
           <p>${esc(challenge.blurb)}</p>
         </div>

@@ -7,7 +7,13 @@
 //  - big ink-outlined eyes, mood-driven mouth, optional blush
 //  - stubby feet and arms, grounded by a soft shadow
 
-const INK = "#1d1537";
+import { hexToHsl, hsl } from "../core/color.js";
+
+// Per-render palette: the outline is a deep tint of the body colour (reads as
+// a premium vinyl toy rather than a flat sticker), eyes get a coloured iris.
+let INK = "#1d1537";
+let IRIS = "#2b2150";
+let GID = "bk";
 const MOUTH = "#3a1530";
 const TONGUE = "#ff7a93";
 let counter = 0;
@@ -51,18 +57,23 @@ const shapeEl = (s, attrs) =>
     : `<rect x="${f(s.x)}" y="${f(s.y)}" width="${f(s.w)}" height="${f(s.h)}" rx="${f(s.r)}" ${attrs}/>`;
 
 function eye(x, y, r, mood, side) {
-  const open = (pupil = 0.58, look = 0) => `
-    <ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r)}" ry="${f(r * 1.1)}" fill="#fff" stroke="${INK}" stroke-width="3.2"/>
-    <circle cx="${f(x - side * r * 0.08)}" cy="${f(y + r * 0.1 + look)}" r="${f(r * pupil)}" fill="${INK}"/>
-    <circle cx="${f(x - r * 0.24)}" cy="${f(y - r * 0.2 + look)}" r="${f(r * 0.22)}" fill="#fff"/>
-    <circle cx="${f(x + r * 0.16)}" cy="${f(y + r * 0.32 + look)}" r="${f(r * 0.09)}" fill="#fff"/>`;
+  const open = (pupil = 0.62, look = 0) => {
+    const px = x - side * r * 0.08, py = y + r * 0.12 + look;
+    return `
+    <ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r)}" ry="${f(r * 1.1)}" fill="url(#${GID}s)" stroke="${INK}" stroke-width="3"/>
+    <circle cx="${f(px)}" cy="${f(py)}" r="${f(r * pupil)}" fill="url(#${GID}i)"/>
+    <circle cx="${f(px)}" cy="${f(py)}" r="${f(r * pupil * 0.55)}" fill="${INK}"/>
+    <ellipse cx="${f(x - r * 0.22)}" cy="${f(py - r * 0.28)}" rx="${f(r * 0.24)}" ry="${f(r * 0.2)}" fill="#fff"/>
+    <circle cx="${f(px + r * 0.22)}" cy="${f(py + r * 0.26)}" r="${f(r * 0.1)}" fill="#fff" opacity=".9"/>`;
+  };
   const brow = (ox, oy, ix, iy) =>
     `<path d="M${f(x + side * r * ox)},${f(y - r * oy)} L${f(x - side * r * ix)},${f(y - r * iy)}" stroke="${INK}" stroke-width="5" stroke-linecap="round"/>`;
 
   switch (mood) {
     case "surprised":
-      return `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r * 1.12)}" ry="${f(r * 1.22)}" fill="#fff" stroke="${INK}" stroke-width="3.2"/>
-        <circle cx="${f(x)}" cy="${f(y)}" r="${f(r * 0.34)}" fill="${INK}"/>
+      return `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r * 1.12)}" ry="${f(r * 1.22)}" fill="url(#${GID}s)" stroke="${INK}" stroke-width="3"/>
+        <circle cx="${f(x)}" cy="${f(y)}" r="${f(r * 0.4)}" fill="url(#${GID}i)"/>
+        <circle cx="${f(x)}" cy="${f(y)}" r="${f(r * 0.22)}" fill="${INK}"/>
         <circle cx="${f(x - r * 0.12)}" cy="${f(y - r * 0.12)}" r="${f(r * 0.11)}" fill="#fff"/>
         <path d="M${f(x - r * 0.8)},${f(y - r * 1.75)} Q${f(x)},${f(y - r * 2.25)} ${f(x + r * 0.8)},${f(y - r * 1.75)}" fill="none" stroke="${INK}" stroke-width="4.5" stroke-linecap="round"/>`;
     case "angry":
@@ -268,33 +279,48 @@ export function renderBlockie(t, { accessory = "none", label = "Blockie characte
 
   const showLimbs = t.category !== "vehicle" && t.category !== "machine";
   const armLift = { happy: -28, cheeky: -20, surprised: -40, angry: 12, sleepy: 18, worried: 6 }[t.mood] ?? 0;
-  const headY = t.category === "building" ? top - bh * 0.3 : t.category === "street" ? top - 10 : top + 2;
+  const headY = t.category === "building" ? top - bh * 0.2 : t.category === "street" ? top - 10 : top + 2;
+
+  const [hue, sat] = hexToHsl(c.main);
+  INK = hsl(hue, Math.min(0.55, sat * 0.8 + 0.1), 0.15);
+  IRIS = hsl(hexToHsl(c.accent)[0], 0.6, 0.38);
+  GID = id;
+  const limb = (cxl, cyl, rx, ry, rot) =>
+    `<ellipse cx="${f(cxl)}" cy="${f(cyl)}" rx="${rx}" ry="${ry}" ${rot === undefined ? "" : `transform="rotate(${rot} ${f(cxl)} ${f(cyl)})"`} fill="url(#${id}l)" stroke="${INK}" stroke-width="3"/>`;
 
   return `<svg class="blockie-svg ${className}" viewBox="0 -26 240 286" role="img" aria-label="${label}" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="${id}g" x1="0" y1="0" x2="0.35" y2="1">
-      <stop offset="0" stop-color="${c.light}"/><stop offset=".45" stop-color="${c.main}"/><stop offset="1" stop-color="${c.shade}"/>
-    </linearGradient>
-    <radialGradient id="${id}h" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="${id}g" cx=".32" cy=".26" r=".95" fx=".3" fy=".22">
+      <stop offset="0" stop-color="${c.light}"/><stop offset=".42" stop-color="${c.main}"/><stop offset="1" stop-color="${c.shade}"/>
+    </radialGradient>
+    <linearGradient id="${id}l" x1="0" y1="0" x2=".4" y2="1"><stop offset="0" stop-color="${c.main}"/><stop offset="1" stop-color="${c.shade}"/></linearGradient>
+    <radialGradient id="${id}h" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff" stop-opacity=".8"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="${id}o" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="${INK}" stop-opacity=".32"/><stop offset="1" stop-color="${INK}" stop-opacity="0"/></radialGradient>
+    <radialGradient id="${id}s" cx=".45" cy=".35" r=".7"><stop offset=".55" stop-color="#fff"/><stop offset="1" stop-color="#e4e0f2"/></radialGradient>
+    <radialGradient id="${id}i" cx=".5" cy=".7" r=".6"><stop offset="0" stop-color="${hsl(hexToHsl(c.accent)[0], 0.75, 0.62)}"/><stop offset="1" stop-color="${IRIS}"/></radialGradient>
+    <radialGradient id="${id}b" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ff6b8b" stop-opacity=".65"/><stop offset="1" stop-color="#ff6b8b" stop-opacity="0"/></radialGradient>
     <clipPath id="${id}c">${shapeEl(shape, "")}</clipPath>
   </defs>
-  <ellipse cx="${cx}" cy="${bottom + 18}" rx="${f(bw * 0.48)}" ry="9" fill="${INK}" opacity=".16"/>
+  <ellipse cx="${cx}" cy="${bottom + 17}" rx="${f(bw * 0.58)}" ry="14" fill="url(#${id}o)"/>
   ${showLimbs ? `
-  <ellipse cx="${f(box.x0 + 4)}" cy="${f(top + bh * 0.62)}" rx="10" ry="19" transform="rotate(${30 + armLift} ${f(box.x0 + 4)} ${f(top + bh * 0.62)})" fill="${c.shade}" stroke="${INK}" stroke-width="3"/>
-  <ellipse cx="${f(box.x1 - 4)}" cy="${f(top + bh * 0.62)}" rx="10" ry="19" transform="rotate(${-30 - armLift} ${f(box.x1 - 4)} ${f(top + bh * 0.62)})" fill="${c.shade}" stroke="${INK}" stroke-width="3"/>
-  <ellipse cx="${f(cx - bw * 0.22)}" cy="${f(bottom + 8)}" rx="17" ry="10" fill="${c.shade}" stroke="${INK}" stroke-width="3"/>
-  <ellipse cx="${f(cx + bw * 0.22)}" cy="${f(bottom + 8)}" rx="17" ry="10" fill="${c.shade}" stroke="${INK}" stroke-width="3"/>` : ""}
+  ${limb(box.x0 + 4, top + bh * 0.62, 10, 19, 30 + armLift)}
+  ${limb(box.x1 - 4, top + bh * 0.62, 10, 19, -30 - armLift)}
+  ${limb(cx - bw * 0.22, bottom + 8, 17, 10)}
+  ${limb(cx + bw * 0.22, bottom + 8, 17, 10)}` : ""}
   ${signatureBack(t, box, c, hat)}
   ${shapeEl(shape, `fill="url(#${id}g)"`)}
   <g clip-path="url(#${id}c)">
     ${details(t, box, c)}
-    <ellipse cx="${f(cx)}" cy="${f(bottom + bh * 0.1)}" rx="${f(bw * 0.7)}" ry="${f(bh * 0.28)}" fill="${c.shade}" opacity=".35"/>
-    <ellipse cx="${f(box.x0 + bw * 0.3)}" cy="${f(top + bh * 0.18)}" rx="${f(bw * 0.26)}" ry="${f(bh * 0.13)}" transform="rotate(-22 ${f(box.x0 + bw * 0.3)} ${f(top + bh * 0.18)})" fill="url(#${id}h)"/>
+    <ellipse cx="${f(cx)}" cy="${f(bottom + bh * 0.12)}" rx="${f(bw * 0.75)}" ry="${f(bh * 0.3)}" fill="${c.shade}" opacity=".4"/>
+    ${shapeEl(shape, `fill="none" stroke="${c.shade}" stroke-width="12" opacity=".55" transform="translate(-4 -5)"`)}
+    ${shapeEl(shape, `fill="none" stroke="#fff" stroke-width="9" opacity=".32" transform="translate(4 5)"`)}
+    <ellipse cx="${f(box.x0 + bw * 0.3)}" cy="${f(top + bh * 0.19)}" rx="${f(bw * 0.28)}" ry="${f(bh * 0.14)}" transform="rotate(-22 ${f(box.x0 + bw * 0.3)} ${f(top + bh * 0.19)})" fill="url(#${id}h)"/>
+    <ellipse cx="${f(box.x0 + bw * 0.24)}" cy="${f(top + bh * 0.14)}" rx="${f(bw * 0.09)}" ry="${f(bh * 0.04)}" transform="rotate(-28 ${f(box.x0 + bw * 0.24)} ${f(top + bh * 0.14)})" fill="#fff" opacity=".85"/>
   </g>
   ${shapeEl(shape, `fill="none" stroke="${INK}" stroke-width="3.6" stroke-linejoin="round"`)}
   <g transform="rotate(${f(tiltDeg)} ${cx} ${f(fy)})">
     ${signatureFront(t, box, c, eyes)}
-    ${t.face.blush ? eyes.map((e, i) => `<ellipse cx="${f(e.x + (i ? 1 : -1) * r * 0.55)}" cy="${f(e.y + r * 1.55)}" rx="${f(r * 0.62)}" ry="${f(r * 0.34)}" fill="#ff6b8b" opacity=".45"/>`).join("") : ""}
+    ${t.face.blush ? eyes.map((e, i) => `<ellipse cx="${f(e.x + (i ? 1 : -1) * r * 0.55)}" cy="${f(e.y + r * 1.55)}" rx="${f(r * 0.85)}" ry="${f(r * 0.5)}" fill="url(#${id}b)"/>`).join("") : ""}
     ${eye(eyes[0].x, eyes[0].y, r, t.mood, -1)}
     ${eye(eyes[1].x, eyes[1].y, r, t.mood, 1)}
     ${mouth(mx, my, m, t.mood)}
