@@ -126,7 +126,7 @@ export default function map(root) {
        <h3>Top spotters</h3>
        <ol class="leader">${top.map(([id, c]) => {
          const p = id === "me" ? { name: "You", avatar: state.profile.avatar, color: state.profile.color } : person(id);
-         return `<li><span class="avatar avatar--xs" style="--c:${p.color}">${p.avatar}</span><b>${esc(p.name)}</b><span>${c} faces</span></li>`;
+         return `<li><span class="avatar avatar--xs" style="--c:${p.color}">${p.avatar}</span><b>${esc(p.name)}</b><span>${c} face${c === 1 ? "" : "s"}</span></li>`;
        }).join("")}</ol>
        <h3>Spotted here</h3>
        <div class="grid grid--sheet">${here.slice(0, 9).map((b) => tile(b)).join("")}</div>`,

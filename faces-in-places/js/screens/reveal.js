@@ -115,6 +115,8 @@ export default function reveal(root) {
 
     const flipper = $("#flipper", root);
     flipper.classList.add("flipper--intro");
+    // The intro animation holds the card's transform; drop it once it ends so taps can flip the card.
+    $(".flipper__inner", flipper).addEventListener("animationend", () => flipper.classList.remove("flipper--intro"), { once: true });
     setTimeout(() => {
       if (!alive) return;
       $("#cardBack", root).innerHTML = `<div class="card-back card-back--photo"><img src="${request.photo}" alt="Original photo"><span>The original</span></div>`;
