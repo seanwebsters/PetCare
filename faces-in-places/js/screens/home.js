@@ -1,0 +1,126 @@
+import { $, esc, icon, logoMark, tile, blockieArt, timeAgo, placeLabel } from "../ui.js";
+import { state, currentStreak, todaysChallenge, level } from "../store.js";
+import { msUntilReset, dayKey } from "../core/challenges.js";
+import { CHALLENGE_XP } from "../core/progression.js";
+import { rarity as getRarity } from "../core/catalog.js";
+import { friendBlockies, person } from "../data/seed.js";
+
+function countdown() {
+  const ms = msUntilReset();
+  const h = Math.floor(ms / 3600000);
+  const m = Math.floor((ms % 3600000) / 60000);
+  return `${h}h ${m.toString().padStart(2, "0")}m`;
+}
+
+function greeting() {
+  const h = new Date().getHours();
+  return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+}
+
+function weekStrip() {
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(Date.now() - i * 86400000);
+    const done = state.challengesCompleted.includes(dayKey(d));
+    days.push(`<li class="${done ? "done" : ""} ${i === 0 ? "today" : ""}"><span>${d.toLocaleDateString(undefined, { weekday: "narrow" })}</span><i>${done ? icon.check : ""}</i></li>`);
+  }
+  return `<ol class="week">${days.join("")}</ol>`;
+}
+
+export function statusChips() {
+  const lv = level();
+  return `<div class="status-chips">
+    <a class="chip chip--stat" href="#/profile" aria-label="Streak ${currentStreak()} days">${icon.flame}<b>${currentStreak()}</b></a>
+    <a class="chip chip--stat" href="#/profile" aria-label="Level ${lv.level}">${icon.bolt}<b>Lv ${lv.level}</b></a>
+    <a class="avatar avatar--sm" href="#/profile" style="--c:${state.profile.color}" aria-label="Your profile">${esc(state.profile.avatar)}</a>
+  </div>`;
+}
+
+export default function home(root) {
+  const { challenge, progress, completed } = todaysChallenge();
+  const mine = state.blockies.slice(0, 8);
+  const friendsToday = friendBlockies().sort((a, b) => b.createdAt - a.createdAt).slice(0, 6);
+
+  const dots = Array.from({ length: progress.target }, (_, i) => `<i class="${i < progress.current ? "on" : ""}"></i>`).join("");
+
+  root.innerHTML = `
+    <header class="topbar">
+      <a class="brand" href="#/home">${logoMark(34)}<span>Faces<br>in Places</span></a>
+      ${statusChips()}
+    </header>
+
+    <section class="hello">
+      <p class="eyebrow">${greeting()}, ${esc(state.profile.name)}</p>
+      <h1 class="display">Everywhere<br>has a face.</h1>
+    </section>
+
+    <section class="challenge ${completed ? "challenge--done" : ""}">
+      <div class="challenge__head">
+        <span class="eyebrow eyebrow--light">Today's challenge</span>
+        <span class="challenge__timer" id="timer">⏱ ${countdown()}</span>
+      </div>
+      <div class="challenge__main">
+        <div class="challenge__emoji" aria-hidden="true">${challenge.emoji}</div>
+        <div>
+          <h2>${esc(challenge.title)}</h2>
+          <p>${esc(challenge.blurb)}</p>
+        </div>
+      </div>
+      <div class="challenge__foot">
+        <div class="challenge__dots" aria-label="${progress.current} of ${progress.target} found">${dots}<span>${progress.current}/${progress.target}</span></div>
+        ${
+          completed
+            ? `<a class="btn btn--light" href="#/friends?tab=challenge">${icon.check} Done · See friends</a>`
+            : `<a class="btn btn--light" href="#/scan?challenge=1">${icon.camera} Start hunting</a>`
+        }
+      </div>
+      <p class="challenge__reward">${completed ? `Nice! Streak: ${currentStreak()} 🔥` : `+${CHALLENGE_XP} XP · keeps your streak alive`}</p>
+    </section>
+
+    <section class="panel">
+      <div class="section-head"><h3>Your week</h3><span class="muted">${currentStreak()}-day streak</span></div>
+      ${weekStrip()}
+    </section>
+
+    <section>
+      <div class="section-head"><h3>Latest finds</h3>${mine.length ? `<a href="#/collection" class="link">See all</a>` : ""}</div>
+      ${
+        mine.length
+          ? `<div class="hscroll">${mine.map((b) => tile(b)).join("")}</div>`
+          : `<a class="empty-cta" href="#/scan">
+              <div class="empty-cta__art">${friendsToday.slice(0, 3).map((b) => `<span>${blockieArt(b)}</span>`).join("")}</div>
+              <div><b>Find your first face</b><p>Point your camera at anything with "eyes" — a house, a socket, a car.</p></div>
+              <span class="btn btn--primary btn--sm">${icon.camera} Scan</span>
+            </a>`
+      }
+    </section>
+
+    <section>
+      <div class="section-head"><h3>Friends are finding</h3><a href="#/friends" class="link">Feed</a></div>
+      <div class="hscroll">
+        ${friendsToday
+          .map((b) => {
+            const p = person(b.ownerId);
+            return `<a class="mini-post" href="#/blockie/${b.id}">
+              <div class="mini-post__art tile--${b.rarity}">${blockieArt(b)}</div>
+              <div class="mini-post__who"><span class="avatar avatar--xs" style="--c:${p.color}">${p.avatar}</span>${esc(p.name)}</div>
+              <div class="muted small">${getRarity(b.rarity).label} · ${esc(placeLabel(b))} · ${timeAgo(b.createdAt)}</div>
+            </a>`;
+          })
+          .join("")}
+      </div>
+    </section>
+
+    <a class="faceoff-teaser" href="#/friends?tab=faceoff">
+      <span class="faceoff-teaser__vs">VS</span>
+      <div><b>Today's Face-Off is live</b><p>Vote for the best face in the city.</p></div>
+      <span class="faceoff-teaser__go">${icon.back}</span>
+    </a>
+  `;
+
+  const timer = setInterval(() => {
+    const el = $("#timer", root);
+    if (el) el.textContent = `⏱ ${countdown()}`;
+  }, 30000);
+  return () => clearInterval(timer);
+}

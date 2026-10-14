@@ -17,3 +17,13 @@ Then open:
 ## Run without a server
 
 You can also open `index.html` directly in your browser.
+
+---
+
+## Faces in Places (new prototype)
+
+A separate mobile-first prototype lives in [`faces-in-places/`](faces-in-places/README.md). It's a real-world game where you spot faces hidden in everyday objects and collect them as **Blockies**.
+
+```bash
+cd faces-in-places && python3 -m http.server 4173
+```
