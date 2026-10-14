@@ -1,5 +1,6 @@
 import { $, esc, icon, logoMark, tile, blockieArt, timeAgo, placeLabel } from "../ui.js";
-import { state, currentStreak, todaysChallenge, level } from "../store.js";
+import { state, currentStreak, todaysChallenge, level, streakInfo, acknowledgeStreakLoss } from "../store.js";
+import { flame, streakBanner } from "./streak.js";
 import { msUntilReset, dayKey } from "../core/challenges.js";
 import { CHALLENGE_XP } from "../core/progression.js";
 import { rarity as getRarity } from "../core/catalog.js";
@@ -36,8 +37,10 @@ function weekStrip() {
   const days = [];
   for (let i = 6; i >= 0; i--) {
     const d = new Date(Date.now() - i * 86400000);
-    const done = state.challengesCompleted.includes(dayKey(d));
-    days.push(`<li class="${done ? "done" : ""} ${i === 0 ? "today" : ""}"><span>${d.toLocaleDateString(undefined, { weekday: "narrow" })}</span><i>${done ? icon.check : ""}</i></li>`);
+    const key = dayKey(d);
+    const done = state.challengesCompleted.includes(key);
+    const frozen = !done && state.frozenDays.includes(key);
+    days.push(`<li class="${done ? "done" : ""} ${frozen ? "frozen" : ""} ${i === 0 ? "today" : ""}"><span>${d.toLocaleDateString(undefined, { weekday: "narrow", timeZone: "UTC" })}</span><i>${done ? icon.check : frozen ? "🧊" : ""}</i></li>`);
   }
   return `<ol class="week">${days.join("")}</ol>`;
 }
@@ -45,7 +48,7 @@ function weekStrip() {
 export function statusChips() {
   const lv = level();
   return `<div class="status-chips">
-    <a class="chip chip--stat" href="#/profile" aria-label="Streak ${currentStreak()} days">${icon.flame}<b>${currentStreak()}</b></a>
+    <button class="chip chip--stat chip--streak ${streakInfo().atRisk ? "chip--risk" : ""}" data-open-streak aria-label="Streak: ${currentStreak()} days">${icon.flame}<b>${currentStreak()}</b></button>
     <a class="chip chip--stat" href="#/profile" aria-label="Level ${lv.level}">${icon.bolt}<b>Lv ${lv.level}</b></a>
     <a class="avatar avatar--sm" href="#/profile" style="--c:${state.profile.color}" aria-label="Your profile">${esc(state.profile.avatar)}</a>
   </div>`;
@@ -74,6 +77,8 @@ export default function home(root) {
       </div>
     </section>
 
+    ${streakBanner()}
+
     <section class="challenge ${completed ? "challenge--done" : ""}">
       <div class="challenge__head">
         <span class="eyebrow eyebrow--light">Today's challenge</span>
@@ -95,11 +100,15 @@ export default function home(root) {
             : `<a class="btn btn--light" href="#/scan?challenge=1">${icon.camera} Start hunting</a>`
         }
       </div>
-      <p class="challenge__reward">${completed ? `Nice! Streak: ${currentStreak()} 🔥` : `+${CHALLENGE_XP} XP · keeps your streak alive`}</p>
+      <p class="challenge__reward">${completed ? `Nice! You're on a ${currentStreak()}-day streak 🔥` : `+${CHALLENGE_XP} XP · ${currentStreak() ? `makes it day ${currentStreak() + 1} of your streak` : "starts your streak"}`}</p>
     </section>
 
     <section class="panel">
-      <div class="section-head"><h3>Your week</h3><span class="muted">${currentStreak()}-day streak</span></div>
+      <button class="streak-row" data-open-streak>
+        ${flame(currentStreak(), { size: "md", lit: streakInfo().alive })}
+        <span><h3>${currentStreak() ? `${currentStreak()}-day streak` : "Start a streak"}</h3><small class="muted">Best ${state.bestStreak} · ${"🧊".repeat(state.streakFreezes) || "no"} freeze${state.streakFreezes === 1 ? "" : "s"}</small></span>
+        <span class="link">Details</span>
+      </button>
       ${weekStrip()}
     </section>
 
@@ -138,6 +147,11 @@ export default function home(root) {
       <span class="faceoff-teaser__go">${icon.back}</span>
     </a>
   `;
+
+  $("[data-ack-loss]", root)?.addEventListener("click", (e) => {
+    acknowledgeStreakLoss();
+    e.currentTarget.remove();
+  });
 
   const timer = setInterval(() => {
     const el = $("#timer", root);

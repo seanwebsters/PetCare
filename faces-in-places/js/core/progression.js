@@ -28,6 +28,7 @@ export const BADGES = [
   { id: "legendary", emoji: "🌟", title: "Living Legend", desc: "Find a Legendary", test: (s) => s.blockies.some((b) => b.rarity === "legendary") },
   { id: "streak3", emoji: "🔥", title: "On Fire", desc: "3-day challenge streak", test: (s) => s.bestStreak >= 3 },
   { id: "streak7", emoji: "☄️", title: "Unstoppable", desc: "7-day challenge streak", test: (s) => s.bestStreak >= 7 },
+  { id: "streak30", emoji: "🌋", title: "Inferno", desc: "30-day challenge streak", test: (s) => s.bestStreak >= 30 },
   { id: "explorer", emoji: "🧭", title: "Explorer", desc: "Find faces in 3 neighbourhoods", test: (s) => new Set(s.blockies.map((b) => b.place?.neighbourhoodId).filter(Boolean)).size >= 3 },
   { id: "set", emoji: "🧩", title: "Full Set", desc: "One Blockie from every category", test: (s) => CATEGORIES.every((c) => s.blockies.some((b) => b.category === c.id)) },
   { id: "social", emoji: "📣", title: "Show-Off", desc: "Share 3 discoveries", test: (s) => s.blockies.filter((b) => b.shared).length >= 3 },

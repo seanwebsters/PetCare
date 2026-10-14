@@ -54,7 +54,21 @@ Everything persists in `localStorage` on the device. Friends and community disco
 4. **Rarity** (`js/core/rarity.js`): rarity is earned by rules, not dice. Points come from category difficulty, vivid colours, multiple colours, contrast, detail, face symmetry, uncommon expressions and matching the daily challenge. The thresholds are Common 0–3, Rare 4–6, Epic 7–9 and Legendary 10+. Every card lists its reasons.
 5. **Identity** (`js/core/naming.js`, `js/core/random.js`): a name, a personality and a `FIP-XXXX-XXXX` collectible ID. The same photo and face always produce the same Blockie.
 
-### Plugging in a real image model
+### Daily streaks
+
+Defined in `js/core/streak.js` (pure functions, unit-tested in `tests/streak.test.mjs`):
+
+- **Earning a day:** a streak day is earned by completing that day's shared challenge. Days are UTC, so they roll over at the same moment as the challenge.
+- **XP:** each completion pays the challenge XP plus 10 XP per streak day, up to +100.
+- **Freezes:** every 7th streak day earns a **freeze**, and you can bank up to 2. When you come back after missed days, banked freezes cover them automatically. The covered days show as 🧊 on the calendar. If you missed more days than you have freezes, the streak restarts at 1.
+- **Milestones:** at 3, 7, 14, 30, 50, 100 and 365 days, with badges at 3, 7 and 30.
+- **Where it shows up:**
+  - **Home:** the flame chip in the top bar (it wiggles when the streak is at risk), an at-risk banner with a countdown or a "your streak ended" notice, a streak row and the week strip.
+  - **Streak sheet:** tap any flame to open it. It shows current, best and total days, freezes, milestone progress, a 5-week calendar and the rules.
+  - **Reveal:** a celebration when you extend your streak, hit a milestone, earn or use a freeze, or set a new best.
+  - **Friends:** streaks appear on the challenge leaderboard.
+
+## Plugging in a real image model
 
 The UI only calls `generator.transform(request)` (see `js/ai/generator.js`). The default `MockGenerator` runs everything on the device. To use a real image-generation backend, set this in `index.html`:
 

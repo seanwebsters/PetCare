@@ -5,6 +5,7 @@ import { uid } from "./core/random.js";
 import { rarity as getRarity } from "./core/catalog.js";
 import { challengeForDate, challengeProgress, dayKey, findMatches } from "./core/challenges.js";
 import { CHALLENGE_XP, STREAK_BONUS_XP, SHARE_XP, levelFromXp, earnedBadges } from "./core/progression.js";
+import { streakStatus, completeDay } from "./core/streak.js";
 
 const KEY = "fip:v1";
 
@@ -17,6 +18,9 @@ const fresh = () => ({
   streak: 0,
   bestStreak: 0,
   lastChallengeDay: null,
+  streakFreezes: 0,
+  frozenDays: [],
+  streakLossSeen: null, // lastChallengeDay of a broken streak the player has been told about
   challengesCompleted: [],
   reactions: {},
   votes: {},
@@ -49,12 +53,33 @@ function save() {
   listeners.forEach((fn) => fn(state));
 }
 
-const yesterdayKey = (date = new Date()) => dayKey(new Date(date.getTime() - 86400000));
+const streakState = () => ({
+  streak: state.streak,
+  best: state.bestStreak,
+  lastDay: state.lastChallengeDay,
+  freezes: state.streakFreezes,
+  frozenDays: state.frozenDays,
+});
 
-// Streak shown to the player: alive if the last completion was today or yesterday.
-export function currentStreak(date = new Date()) {
-  const last = state.lastChallengeDay;
-  return last === dayKey(date) || last === yesterdayKey(date) ? state.streak : 0;
+// Everything the UI needs about the streak right now.
+export function streakInfo(date = new Date()) {
+  const status = streakStatus(streakState(), dayKey(date));
+  return {
+    ...status,
+    best: state.bestStreak,
+    freezes: state.streakFreezes,
+    frozenDays: state.frozenDays,
+    completedDays: state.challengesCompleted,
+    // A broken streak the player hasn't been told about yet.
+    unseenLoss: !status.alive && status.lost > 1 && state.streakLossSeen !== state.lastChallengeDay ? status.lost : 0,
+  };
+}
+
+export const currentStreak = (date = new Date()) => streakInfo(date).streak;
+
+export function acknowledgeStreakLoss() {
+  state.streakLossSeen = state.lastChallengeDay;
+  save();
 }
 
 export const todaysFinds = (date = new Date()) => state.blockies.filter((b) => dayKey(new Date(b.createdAt)) === dayKey(date));
@@ -88,15 +113,21 @@ export function addBlockie(result, { photo, face, place, shared }) {
 
   let xpGained = getRarity(blockie.rarity).xp + (shared ? SHARE_XP : 0);
   let challengeCompleted = false;
+  let streak = null;
   const today = dayKey();
   const { progress } = todaysChallenge();
   if (progress.done && !state.challengesCompleted.includes(today)) {
     challengeCompleted = true;
-    state.streak = state.lastChallengeDay === yesterdayKey() ? state.streak + 1 : 1;
-    state.bestStreak = Math.max(state.bestStreak, state.streak);
-    state.lastChallengeDay = today;
+    const { next, events } = completeDay(streakState(), today);
+    state.streak = next.streak;
+    state.bestStreak = next.best;
+    state.lastChallengeDay = next.lastDay;
+    state.streakFreezes = next.freezes;
+    state.frozenDays = next.frozenDays;
     state.challengesCompleted.push(today);
-    xpGained += CHALLENGE_XP + Math.min(state.streak, 10) * STREAK_BONUS_XP;
+    const bonus = Math.min(state.streak, 10) * STREAK_BONUS_XP;
+    xpGained += CHALLENGE_XP + bonus;
+    streak = { ...events, days: state.streak, bonusXp: bonus, freezes: state.streakFreezes };
   }
   state.xp += xpGained;
   state.badges = earnedBadges(state);
@@ -106,6 +137,7 @@ export function addBlockie(result, { photo, face, place, shared }) {
     blockie,
     xpGained,
     challengeCompleted,
+    streak,
     levelUp: level().level > before ? level().level : null,
     newBadges: state.badges.filter((id) => !badgesBefore.has(id)),
   };

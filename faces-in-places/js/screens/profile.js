@@ -33,8 +33,8 @@ export default function profile(root) {
 
       <section class="stats">
         <div><b>${state.blockies.length}</b><span>Blockies</span></div>
-        <div><b>${icon.flame}${currentStreak()}</b><span>Streak</span></div>
-        <div><b>${state.bestStreak}</b><span>Best streak</span></div>
+        <button data-open-streak><b>${icon.flame}${currentStreak()}</b><span>Streak</span></button>
+        <button data-open-streak><b>${state.bestStreak}</b><span>Best streak</span></button>
         <div><b>${state.challengesCompleted.length}</b><span>Challenges</span></div>
         <div><b>${hoods}</b><span>Areas</span></div>
         <div><b>${state.xp}</b><span>Total XP</span></div>

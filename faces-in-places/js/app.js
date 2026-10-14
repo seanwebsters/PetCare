@@ -9,6 +9,7 @@ import map from "./screens/map.js";
 import friends from "./screens/friends.js";
 import profile from "./screens/profile.js";
 import onboarding from "./screens/onboarding.js";
+import { openStreakSheet } from "./screens/streak.js";
 
 const routes = [
   { path: /^\/home$/, screen: home, tab: "home" },
@@ -52,6 +53,11 @@ function render() {
   view.classList.add("view--enter");
   cleanup = route.screen(view, { params, query }) || null;
 }
+
+// Any element with data-open-streak opens the streak sheet.
+document.addEventListener("click", (e) => {
+  if (e.target.closest("[data-open-streak]")) openStreakSheet();
+});
 
 onStorageWarning((msg) => toast(msg, { emoji: "💾", timeout: 4000 }));
 window.addEventListener("hashchange", render);

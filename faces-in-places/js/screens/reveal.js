@@ -4,6 +4,27 @@ import { session } from "../session.js";
 import { createGenerator } from "../ai/generator.js";
 import { rarity as getRarity } from "../core/catalog.js";
 import { BADGES, levelTitle } from "../core/progression.js";
+import { flame } from "./streak.js";
+
+function streakCelebration(st) {
+  const headline = st.milestone
+    ? `${st.days}-day milestone!`
+    : st.extended
+      ? `Day ${st.days} of your streak!`
+      : st.restarted
+        ? "New streak started!"
+        : "Streak started!";
+  const notes = [
+    st.usedFreezes ? `🧊 ${st.usedFreezes === 1 ? "A freeze" : `${st.usedFreezes} freezes`} saved your streak` : "",
+    st.earnedFreeze ? "🧊 You earned a streak freeze!" : "",
+    st.newBest && st.days > 1 ? "🏅 New personal best" : "",
+    st.bonusXp ? `+${st.bonusXp} XP streak bonus` : "",
+  ].filter(Boolean);
+  return `<div class="streak-celebrate ${st.milestone ? "streak-celebrate--milestone" : ""}" data-open-streak role="button" tabindex="0">
+    ${flame(st.days, { size: "lg" })}
+    <div><b>${headline}</b>${notes.map((n) => `<small>${n}</small>`).join("")}</div>
+  </div>`;
+}
 
 const generator = createGenerator();
 
@@ -51,7 +72,7 @@ export default function reveal(root) {
       $("#retry", root).onclick = () => reveal(root);
     });
 
-  function showReveal({ blockie: b, xpGained, challengeCompleted, levelUp, newBadges }) {
+  function showReveal({ blockie: b, xpGained, challengeCompleted, streak, levelUp, newBadges }) {
     const r = getRarity(b.rarity);
     const flash = document.createElement("div");
     flash.className = "flash";
@@ -77,6 +98,7 @@ export default function reveal(root) {
             ${challengeCompleted ? `<span class="pill pill--win">🏆 Challenge complete!</span>` : ""}
             ${levelUp ? `<span class="pill pill--level">⬆️ Level ${levelUp} · ${levelTitle(levelUp)}</span>` : ""}
           </div>
+          ${streak ? streakCelebration(streak) : ""}
           ${newBadges.length ? `<div class="new-badges">${newBadges.map((id) => BADGES.find((x) => x.id === id)).map((x) => `<div class="badge badge--new"><span>${x.emoji}</span><b>${x.title}</b></div>`).join("")}</div>` : ""}
           <details class="why">
             <summary>Why ${r.label}? <span class="muted">${b.rarityScore} pts</span></summary>
